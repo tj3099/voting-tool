@@ -25,7 +25,7 @@ export class UserService {
     return this.http.put<User[]>(baseUrl + '/user', data);
   }
 
-  get(data: any, mail: any): Observable<User> {
+  get(data: any, mail: any): Observable<any> {
     return this.http.put(baseUrl + '/user/' + mail, data);
   }
 
