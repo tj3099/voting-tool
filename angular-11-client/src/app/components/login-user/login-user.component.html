@@ -1,6 +1,10 @@
+<div *ngIf="alert != null">
+  <div [class]="alert.type" role="alert">{{ alert.message }}</div>
+</div>
+
 <div>
   <div class="submit-form">
-      <div class="form-group">
+    <div class="form-group">
         <label for="mail">Mail</label>
         <input
           type="text"
@@ -12,7 +16,7 @@
         />
       </div>
 
-      <div class="form-group">
+    <div class="form-group">
         <label for="secretKey">SecretKey</label>
         <input
           class="form-control"
@@ -23,10 +27,8 @@
         />
       </div>
 
-      <button (click)="loginUser()" class="btn btn-success">Login</button>
+    <button (click)="loginUser()" class="btn btn-success btn-lg btn-block">Login</button>
+    <button (click)="logoutUser()" class="btn btn-danger btn-lg btn-block">Logout</button>
 
-    <div *ngIf="logedin">
-      <h4>User Logedin!</h4>
-    </div>
   </div>
 </div>

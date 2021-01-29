@@ -19,7 +19,7 @@ module.exports = function (config) {
       suppressAll: true // removes the duplicated traces
     },
     coverageReporter: {
-      dir: require('path').join(__dirname, './coverage/Angular11Crud'),
+      dir: require('path').join(__dirname, './coverage/Voting Tool | by Thomas'),
       subdir: '.',
       reporters: [
         { type: 'html' },

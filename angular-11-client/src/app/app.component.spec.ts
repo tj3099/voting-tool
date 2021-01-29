@@ -20,16 +20,16 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'Angular11Crud'`, () => {
+  it(`should have as title 'Voting Tool | by Thomas'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('Angular11Crud');
+    expect(app.title).toEqual('Voting Tool | by Thomas');
   });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement;
-    expect(compiled.querySelector('.content span').textContent).toContain('Angular11Crud app is running!');
+    expect(compiled.querySelector('.content span').textContent).toContain('Voting Tool | by Thomas app is running!');
   });
 });

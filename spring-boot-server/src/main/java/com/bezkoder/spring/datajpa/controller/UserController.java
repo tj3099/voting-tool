@@ -33,7 +33,7 @@ public class UserController {
 	public ResponseEntity<User> loginUser(@RequestBody User user) {
 		try {
 			User requestedUser = userRepository.findByMail(user.getMail());
-			if (requestedUser.getMail().equals(user.getMail()) && requestedUser.getSecretKey().equals(user.getSecretKey())){
+			if (requestedUser != null && requestedUser.getMail().equals(user.getMail()) && requestedUser.getSecretKey().equals(user.getSecretKey())){
 				UUID uuid = UUID.randomUUID();
 				user.setSessionId(uuid.toString());
 				requestedUser.setSessionId(uuid.toString());
@@ -41,7 +41,23 @@ public class UserController {
 				user.setGrants(requestedUser.getGrants());
 				return new ResponseEntity<>(user, HttpStatus.OK);
 			}else {
-				return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+				return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+			}
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@PostMapping("/user/logout")
+	public ResponseEntity<User> logoutUser(@RequestBody User user){
+		try {
+			User requestedUser = userRepository.findByMail(user.getMail());
+			if (requestedUser != null && requestedUser.getSessionId().equals(user.getSessionId())){
+				requestedUser.setSessionId(null);
+				userRepository.save(requestedUser);
+				return new ResponseEntity<>(null, HttpStatus.OK);
+			}else {
+				return new ResponseEntity<>(null,HttpStatus.FORBIDDEN);
 			}
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);

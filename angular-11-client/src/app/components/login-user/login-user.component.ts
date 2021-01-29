@@ -3,6 +3,11 @@ import { User } from 'src/app/models/user.model';
 import { UserService } from 'src/app/services/user.service';
 import { Router } from '@angular/router';
 
+interface Alert {
+  type: string;
+  message: string;
+}
+
 @Component({
   selector: 'app-login-user',
   templateUrl: './login-user.component.html',
@@ -16,7 +21,8 @@ export class LoginUserComponent implements OnInit {
     sessionId: '',
     grants: 0
   };
-  logedin: boolean = false;
+
+  alert: Alert;
 
   constructor(private userService: UserService, private router: Router) { }
 
@@ -24,7 +30,6 @@ export class LoginUserComponent implements OnInit {
   }
 
   loginUser(): void {
-  this.logedin = false;
     const data = {
       mail: this.myUser.mail,
       secretKey: this.myUser.secretKey
@@ -32,21 +37,50 @@ export class LoginUserComponent implements OnInit {
     this.userService.login(data)
       .subscribe(
         response => {
-          this.logedin = true;
           this.myUser = response;
           localStorage.setItem('sessionId', this.myUser.sessionId);
           localStorage.setItem('mail', this.myUser.mail);
           if(this.myUser.grants === 99){
-            console.log("admin");
             this.router.navigateByUrl('/admin');
           }
           if(this.myUser.grants == 0){
-              console.log("user");
+          this.alert = {
+            type: 'alert alert-success',
+            message: 'You are logged in!'
+          }
               this.router.navigateByUrl('/login');
           }
         },
         error => {
           console.log(error);
+          this.alert = {
+            type: 'alert alert-danger',
+            message: 'Login not possible. Please check credentials!'
+          }
         });
   }
+
+  logoutUser(): void {
+      const data = {
+        mail: this.myUser.mail,
+        sessionId: localStorage.getItem('sessionId')
+      };
+      this.userService.logout(data)
+        .subscribe(
+          response => {
+            this.myUser = response;
+            localStorage.clear();
+            this.alert = {
+              type: 'alert alert-success',
+              message: 'You are logged out!'
+            };
+            this.myUser = {
+              mail: "",
+              secretKey: ""
+            };
+          },
+          error => {
+            console.log(error);
+          });
+    }
 }

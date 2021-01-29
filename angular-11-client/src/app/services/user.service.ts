@@ -16,6 +16,10 @@ export class UserService {
       return this.http.post(baseUrl + '/user/login', data);
   }
 
+  logout(data: any): Observable<any> {
+        return this.http.post(baseUrl + '/user/logout', data);
+    }
+
   getAll(data: any): Observable<User[]> {
     console.log(data);
     return this.http.put<User[]>(baseUrl + '/user', data);
