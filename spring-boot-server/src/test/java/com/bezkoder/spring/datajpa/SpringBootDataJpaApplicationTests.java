@@ -1,12 +1,13 @@
 package com.bezkoder.spring.datajpa;
 
-import org.junit.jupiter.api.Test;
+
+import org.junit.Ignore;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 class SpringBootDataJpaApplicationTests {
 
-	@Test
+	@Ignore
 	void contextLoads() {
 	}
 

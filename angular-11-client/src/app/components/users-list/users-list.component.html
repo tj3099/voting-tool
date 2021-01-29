@@ -1,0 +1,69 @@
+<a routerLink="add" class="nav-link">Add</a>
+
+<div class="list row">
+  <div class="col-md-8">
+    <div class="input-group mb-3">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Search by title"
+        [(ngModel)]="title"
+      />
+      <div class="input-group-append">
+        <button
+          class="btn btn-outline-secondary"
+          type="button"
+          (click)="searchTitle()"
+        >
+          Search
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <h4>Users List</h4>
+    <ul class="list-group">
+      <li
+        class="list-group-item"
+        *ngFor="let user of users; let i = index"
+        [class.active]="i == currentIndex"
+        (click)="setActiveUser(user, i)"
+      >
+        {{ user.mail }}
+      </li>
+    </ul>
+
+    <button class="m-3 btn btn-sm btn-danger" (click)="removeAllUsers()">
+      Remove All
+    </button>
+    <button class="m-3 btn btn-sm btn-info" (click)="resetHasVoted()">
+      Reset Voting
+    </button>
+  </div>
+  <div class="col-md-6">
+    <div *ngIf="currentUser">
+      <h4>User</h4>
+      <div>
+        <label><strong>Title:</strong></label> {{ currentUser.mail }}
+      </div>
+      <div>
+        <label><strong>Description:</strong></label>
+        {{ currentUser.secretKey }}
+      </div>
+      <div>
+        <label><strong>Status:</strong></label>
+        {{ currentUser.hasVoted ? "Voted" : "Pending" }}
+      </div>
+
+      <a class="badge badge-warning" routerLink="/users/{{ currentUser.mail }}">
+        Edit
+      </a>
+    </div>
+
+    <div *ngIf="!currentUser">
+      <br />
+      <p>Please click on a User...</p>
+      <p>{{ message }}</p>
+    </div>
+  </div>
+</div>

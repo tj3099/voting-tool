@@ -3,7 +3,7 @@
 For more details, please visit:
 [https://bezkoder.com/angular-11-spring-boot-crud/](https://bezkoder.com/angular-11-spring-boot-crud/)
 
-In this tutorial, we will learn how to build a full stack Angular 11 + Spring Boot example with a CRUD App. The back-end server uses Spring Boot with Spring Web MVC for REST Controller and Spring Data JPA for interacting with MySQL database. Front-end side is made with Angular 11, HTTPClient & Router.
+In this user, we will learn how to build a full stack Angular 11 + Spring Boot example with a CRUD App. The back-end server uses Spring Boot with Spring Web MVC for REST Controller and Spring Data JPA for interacting with MySQL database. Front-end side is made with Angular 11, HTTPClient & Router.
 
 We will build a full-stack Tutorial Application in that:
 
@@ -14,15 +14,15 @@ We will build a full-stack Tutorial Application in that:
 
 Add an object:
 
-![spring-boot-angular-11-crud-example-add-tutorial](spring-boot-angular-11-crud-example-add-tutorial.png)
+![spring-boot-angular-11-crud-example-add-user](spring-boot-angular-11-crud-example-add-user.png)
 
 Retrieve all objects:
 
-![spring-boot-angular-11-crud-example-retrieve-all-tutorial](spring-boot-angular-11-crud-example-retrieve-all-tutorial.png)
+![spring-boot-angular-11-crud-example-retrieve-all-user](spring-boot-angular-11-crud-example-retrieve-all-user.png)
 
 Click on **Edit** button to go to a Tutorial page:
 
-![spring-boot-angular-11-crud-example-retrieve-one-tutorial](spring-boot-angular-11-crud-example-retrieve-one-tutorial.png)
+![spring-boot-angular-11-crud-example-retrieve-one-user](spring-boot-angular-11-crud-example-retrieve-one-user.png)
 
 On this Page, you can:
 
@@ -30,11 +30,11 @@ On this Page, you can:
 - delete the Tutorial using **Delete** button
 - update the Tutorial details with **Update** button
 
-![spring-boot-angular-11-crud-example-update-tutorial](spring-boot-angular-11-crud-example-update-tutorial.png)
+![spring-boot-angular-11-crud-example-update-user](spring-boot-angular-11-crud-example-update-user.png)
 
 Search Tutorials by title:
 
-![spring-boot-angular-11-crud-example-search-tutorial](spring-boot-angular-11-crud-example-search-tutorial.png)
+![spring-boot-angular-11-crud-example-search-user](spring-boot-angular-11-crud-example-search-user.png)
 
 ## Angular 11 & Spring Boot CRUD Architecture
 This is the application architecture we will build:
@@ -49,7 +49,7 @@ This is our Angular Spring Boot CRUD application demo and brief instruction, run
 
 [![Angular Spring Boot CRUD application demo](http://img.youtube.com/vi/K8mV6XWA_EY/0.jpg)](http://www.youtube.com/watch?v=K8mV6XWA_EY "Angular Spring Boot CRUD application demo")
 
-In the video, we use Angular 10, but it has the same logic & UI as Angular version 11 in this tutorial.
+In the video, we use Angular 10, but it has the same logic & UI as Angular version 11 in this user.
 
 # More Practice
 

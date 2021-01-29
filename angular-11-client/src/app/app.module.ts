@@ -5,16 +5,18 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { AddTutorialComponent } from './components/add-tutorial/add-tutorial.component';
-import { TutorialDetailsComponent } from './components/tutorial-details/tutorial-details.component';
-import { TutorialsListComponent } from './components/tutorials-list/tutorials-list.component';
+import { AddUserComponent } from './components/add-user/add-user.component';
+import { LoginUserComponent } from './components/login-user/login-user.component';
+import { UserDetailsComponent } from './components/user-details/user-details.component';
+import { UsersListComponent } from './components/users-list/users-list.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    AddTutorialComponent,
-    TutorialDetailsComponent,
-    TutorialsListComponent
+    AddUserComponent,
+    LoginUserComponent,
+    UserDetailsComponent,
+    UsersListComponent
   ],
   imports: [
     BrowserModule,
