@@ -3,5 +3,5 @@ export class User {
   secretKey?: string;
   hasVoted?: boolean;
   sessionId: string;
-  grant: int;
+  grants: int;
 }

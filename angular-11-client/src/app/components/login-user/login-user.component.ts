@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from 'src/app/models/user.model';
 import { UserService } from 'src/app/services/user.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login-user',
@@ -13,11 +14,11 @@ export class LoginUserComponent implements OnInit {
     secretKey: '',
     hasVoted: false,
     sessionId: '',
-    grant: 0
+    grants: 0
   };
   logedin: boolean = false;
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService, private router: Router) { }
 
   ngOnInit(): void {
   }
@@ -35,10 +36,12 @@ export class LoginUserComponent implements OnInit {
           this.myUser = response;
           localStorage.setItem('sessionId', this.myUser.sessionId);
           localStorage.setItem('mail', this.myUser.mail);
-          if(this.myUser.grant == 99){
+          if(this.myUser.grants === 99){
+            console.log("admin");
             this.router.navigateByUrl('/admin');
           }
-          if(this.myUser.grant == 0){
+          if(this.myUser.grants == 0){
+              console.log("user");
               this.router.navigateByUrl('/login');
           }
         },

@@ -21,7 +21,12 @@ export class UsersListComponent implements OnInit {
   }
 
   retrieveUsers(): void {
-    this.UserService.getAll()
+  const data = {
+    mail: localStorage.getItem('mail'),
+    sessionId: localStorage.getItem('sessionId')
+  }
+  console.log(data);
+    this.UserService.getAll(data)
       .subscribe(
         data => {
           this.users = data;
@@ -32,19 +37,17 @@ export class UsersListComponent implements OnInit {
         });
   }
 
-  refreshList(): void {
-    this.retrieveUsers();
-    this.currentUser = undefined;
-    this.currentIndex = -1;
-  }
-
   setActiveUser(user: User, index: number): void {
     this.currentUser = user;
     this.currentIndex = index;
   }
 
   removeAllUsers(): void {
-    this.UserService.deleteAll()
+  const data = {
+      mail: localStorage.getItem('mail'),
+      sessionId: localStorage.getItem('sessionId')
+    }
+    this.UserService.deleteAll(data)
       .subscribe(
         response => {
           console.log(response);
@@ -55,23 +58,12 @@ export class UsersListComponent implements OnInit {
         });
   }
 
-  searchTitle(): void {
-    this.currentUser = undefined;
-    this.currentIndex = -1;
-
-    this.UserService.findByTitle(this.title)
-      .subscribe(
-        data => {
-          this.users = data;
-          console.log(data);
-        },
-        error => {
-          console.log(error);
-        });
-  }
-
   resetHasVoted(): void {
-    this.UserService.resetVoting(false)
+  const data = {
+      mail: localStorage.getItem('mail'),
+      sessionId: localStorage.getItem('sessionId')
+    }
+    this.UserService.resetVoting(data, false)
       .subscribe(
         response => {
           console.log(response);

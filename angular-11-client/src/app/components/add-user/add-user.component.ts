@@ -27,8 +27,8 @@ export class AddUserComponent implements OnInit {
       secretKey: this.user.secretKey
     },
     callingUser: {
-      mail: localStorage.getItem('mail');
-      sessionId: localStorage.getItem('sessionId');
+      mail: localStorage.getItem('mail'),
+      sessionId: localStorage.getItem('sessionId')
     }
     };
 

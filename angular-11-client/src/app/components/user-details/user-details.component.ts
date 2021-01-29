@@ -27,7 +27,11 @@ export class UserDetailsComponent implements OnInit {
   }
 
   getUser(id: string): void {
-    this.UserService.get(id)
+  const data = {
+      mail: localStorage.getItem('mail'),
+      sessionId: localStorage.getItem('sessionId')
+    }
+    this.UserService.get(data, id)
       .subscribe(
         data => {
           this.currentUser = data;
@@ -38,24 +42,12 @@ export class UserDetailsComponent implements OnInit {
         });
   }
 
-
-
-  updateUser(): void {
-    this.message = '';
-
-    this.UserService.update(this.currentUser.mail, this.currentUser)
-      .subscribe(
-        response => {
-          console.log(response);
-          this.message = response.message ? response.message : 'This user was updated successfully!';
-        },
-        error => {
-          console.log(error);
-        });
-  }
-
   deleteUser(): void {
-    this.UserService.delete(this.currentUser.mail)
+    const data = {
+        mail: localStorage.getItem('mail'),
+        sessionId: localStorage.getItem('sessionId')
+    }
+    this.UserService.delete(data, this.currentUser.mail)
       .subscribe(
         response => {
           console.log(response);

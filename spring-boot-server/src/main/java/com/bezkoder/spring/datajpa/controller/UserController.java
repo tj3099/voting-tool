@@ -38,6 +38,7 @@ public class UserController {
 				user.setSessionId(uuid.toString());
 				requestedUser.setSessionId(uuid.toString());
 				userRepository.save(requestedUser);
+				user.setGrants(requestedUser.getGrants());
 				return new ResponseEntity<>(user, HttpStatus.OK);
 			}else {
 				return new ResponseEntity<>(HttpStatus.FORBIDDEN);
@@ -47,7 +48,7 @@ public class UserController {
 		}
 	}
 
-	@GetMapping("/user")
+	@PutMapping("/user")
 	public ResponseEntity<List<User>> getAllUsers(@RequestBody User callingUser) {
 		User verifyUser = userRepository.findByMail(callingUser.getMail());
 		if(verifyUser != null && verifyUser.getSessionId().equals(callingUser.getSessionId()) && verifyUser.getGrants() >= 99) {
@@ -69,7 +70,7 @@ public class UserController {
 		}
 	}
 
-	@GetMapping("/user/{mail}")
+	@PutMapping("/user/{mail}")
 	public ResponseEntity<User> getUserByMail(@PathVariable("mail") String mail, @RequestBody User callingUser) {
 		User verifyUser = userRepository.findByMail(callingUser.getMail());
 		if(verifyUser != null && verifyUser.getSessionId().equals(callingUser.getSessionId()) && verifyUser.getGrants() >= 99) {

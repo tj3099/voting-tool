@@ -12,39 +12,34 @@ export class UserService {
 
   constructor(private http: HttpClient) { }
 
-  getAll(): Observable<User[]> {
-    return this.http.get<User[]>(baseUrl + '/user');
+  login(data: any): Observable<any> {
+      return this.http.post(baseUrl + '/user/login', data);
   }
 
-  get(mail: any): Observable<User> {
-    return this.http.get(baseUrl + '/user/' + mail);
+  getAll(data: any): Observable<User[]> {
+    console.log(data);
+    return this.http.put<User[]>(baseUrl + '/user', data);
+  }
+
+  get(data: any, mail: any): Observable<User> {
+    return this.http.put(baseUrl + '/user/' + mail, data);
   }
 
   create(data: any): Observable<any> {
     return this.http.post(baseUrl + '/user/add', data);
   }
 
-  login(data: any): Observable<any> {
-      return this.http.post(baseUrl + '/user/login', data);
+
+  resetVoting(data: any, hasVoted: any): Observable<any> {
+      return this.http.put(baseUrl + '/user/resetVoting/' + hasVoted, data);
     }
 
-  update(mail: any, data: any): Observable<any> {
-    return this.http.put(baseUrl + '/user/add/' + mail, data);
-  }
-
-  resetVoting(hasVoted: any): Observable<any> {
-      return this.http.put(baseUrl + '/user/resetVoting/' + hasVoted, "mySessionId");
-    }
-
-  delete(mail: any): Observable<any> {
+  delete(data: any, mail: any): Observable<any> {
     return this.http.delete(baseUrl + '/user/' + mail);
   }
 
-  deleteAll(): Observable<any> {
-    return this.http.delete(baseUrl + '/user/resetAll/');
+  deleteAll(data: any): Observable<any> {
+    return this.http.delete(baseUrl + '/user/resetAll/', data);
   }
 
-  findByTitle(mail: any): Observable<any> {
-    return this.http.get(baseUrl + '/user/' + mail);
-  }
 }
