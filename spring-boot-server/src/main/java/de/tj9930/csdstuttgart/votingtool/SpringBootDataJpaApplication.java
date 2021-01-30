@@ -1,4 +1,4 @@
-package com.bezkoder.spring.datajpa;
+package de.tj9930.csdstuttgart.votingtool;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

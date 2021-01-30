@@ -1,6 +1,6 @@
-package com.bezkoder.spring.datajpa.repository;
+package de.tj9930.csdstuttgart.votingtool.repository;
 
-import com.bezkoder.spring.datajpa.model.Question;
+import de.tj9930.csdstuttgart.votingtool.model.Question;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.bezkoder.spring.datajpa.model;
+package de.tj9930.csdstuttgart.votingtool.model;
 
 
 import javax.persistence.*;
@@ -11,12 +11,6 @@ public class Vote {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "title")
-    private String title;
-
-    @Column(name = "description")
-    private String description;
-
     @Column(name = "votesYes")
     private boolean votesYes;
 
@@ -26,31 +20,12 @@ public class Vote {
     @Column(name = "noVotes")
     private boolean noVotes;
 
-    @Column(name = "isOpen")
-    private boolean isOpen;
-
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public boolean getVotesYes() {
@@ -76,12 +51,5 @@ public class Vote {
     public void setNoVotes(boolean noVotes) {
         this.noVotes = noVotes;
     }
-
-    public boolean isOpen() {
-        return isOpen;
-    }
-
-    public void setOpen(boolean open) {
-        isOpen = open;
-    }
 }
+

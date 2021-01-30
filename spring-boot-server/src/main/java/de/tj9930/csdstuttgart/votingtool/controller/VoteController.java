@@ -1,11 +1,11 @@
-package com.bezkoder.spring.datajpa.controller;
+package de.tj9930.csdstuttgart.votingtool.controller;
 
-import com.bezkoder.spring.datajpa.model.Question;
-import com.bezkoder.spring.datajpa.model.User;
-import com.bezkoder.spring.datajpa.model.Vote;
-import com.bezkoder.spring.datajpa.model.VoteRequestModel;
-import com.bezkoder.spring.datajpa.repository.UserRepository;
-import com.bezkoder.spring.datajpa.repository.QuestionRepository;
+import de.tj9930.csdstuttgart.votingtool.model.Question;
+import de.tj9930.csdstuttgart.votingtool.model.User;
+import de.tj9930.csdstuttgart.votingtool.model.Vote;
+import de.tj9930.csdstuttgart.votingtool.model.VoteRequestModel;
+import de.tj9930.csdstuttgart.votingtool.repository.UserRepository;
+import de.tj9930.csdstuttgart.votingtool.repository.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,15 +25,14 @@ public class VoteController {
     QuestionRepository questionRepository;
 
     @PostMapping("/vote")
-    public ResponseEntity<User> loginUser(@RequestBody VoteRequestModel voteRequestModel) {
+    public ResponseEntity<User> vote(@RequestBody VoteRequestModel voteRequestModel) {
         try {
             User user = voteRequestModel.getUser();
             Vote vote = voteRequestModel.getVote();
             if (user != null || vote != null){
                 return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
             }
-            User requestedUser = userRepository.findByMail(user.getMail());
-            if (requestedUser != null && requestedUser.getMail().equals(user.getMail()) && requestedUser.getSessionId().equals(user.getSessionId())){
+            if (verifyUser(user, 0)){
                 Optional<Question> question = questionRepository.findById(vote.getId());
                 if (!question.isPresent()) {
                     return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -45,7 +44,7 @@ public class VoteController {
                 }else if (vote.getVotesNo()){
                     question.get().addVoteNo();
                 }
-
+                User requestedUser = userRepository.findByMail(user.getMail());
                 requestedUser.setHasVoted(true);
                 userRepository.save(requestedUser);
                 questionRepository.save(question.get());
@@ -56,5 +55,15 @@ public class VoteController {
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+
+    public boolean verifyUser(User user, int grants){
+        User requestedUser = userRepository.findByMail(user.getMail());
+        if (requestedUser != null && requestedUser.getMail().equals(user.getMail()) && requestedUser.getSessionId().equals(user.getSessionId())
+                && requestedUser.getGrants() >= grants){
+            return true;
+        }
+        return false;
     }
 }

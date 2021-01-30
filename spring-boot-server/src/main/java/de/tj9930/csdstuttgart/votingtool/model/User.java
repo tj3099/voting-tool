@@ -1,4 +1,4 @@
-package com.bezkoder.spring.datajpa.model;
+package de.tj9930.csdstuttgart.votingtool.model;
 
 
 import javax.persistence.Column;
