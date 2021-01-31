@@ -8,7 +8,7 @@ const baseUrl = 'http://localhost:8080/api/votes';
 @Injectable({
   providedIn: 'root'
 })
-export class UserService {
+export class VoteService {
 
   constructor(private http: HttpClient) { }
 

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from 'src/app/models/user.model';
 import { UserService } from 'src/app/services/user.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-users-list',
@@ -51,7 +52,7 @@ export class UsersListComponent implements OnInit {
       .subscribe(
         response => {
           console.log(response);
-          this.refreshList();
+          this.retrieveUsers();
         },
         error => {
           console.log(error);
@@ -67,7 +68,7 @@ export class UsersListComponent implements OnInit {
       .subscribe(
         response => {
           console.log(response);
-          this.refreshList();
+          this.retrieveUsers();
         },
         error => {
           console.log(error);

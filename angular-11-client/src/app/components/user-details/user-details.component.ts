@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from 'src/app/services/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from 'src/app/models/user.model';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-user-details',
@@ -12,7 +13,9 @@ export class UserDetailsComponent implements OnInit {
   currentUser: User = {
     mail: '',
     secretKey: '',
-    hasVoted: false
+    hasVoted: false,
+    sessionId: '',
+    grants: 0
   };
   message = '';
 

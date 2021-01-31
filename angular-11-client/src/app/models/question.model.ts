@@ -1,9 +1,9 @@
 export class Question {
-  id: long;
-  title: string;
-  description: string;
-  votesYes: int;
-  votesNo: int;
-  noVotes: int;
-  isOpen: boolean;
+  id: number = 0;
+  title: string = '';
+  description: string = '';
+  votesYes: number = 0;
+  votesNo: number = 0;
+  noVotes: number = 0;
+  open: boolean = false;
 }

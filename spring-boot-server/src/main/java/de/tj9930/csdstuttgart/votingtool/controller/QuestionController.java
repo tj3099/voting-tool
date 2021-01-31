@@ -28,12 +28,60 @@ public class QuestionController {
         try {
             User user = questionRequestModel.getUser();
             Question question = questionRequestModel.getQuestion();
-            if (user != null || question != null){
+            if (user == null || question == null){
                 return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
             }
             if (verifyUser(user, 50)){
                 questionRepository.save(question);
                 return new ResponseEntity<>(question, HttpStatus.OK);
+            }else {
+                return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/open")
+    public ResponseEntity<Question> openQuestion(@RequestBody QuestionRequestModel questionRequestModel) {
+        try {
+            User user = questionRequestModel.getUser();
+            Question question = questionRequestModel.getQuestion();
+            if (user == null || question == null){
+                return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+            if (verifyUser(user, 50)){
+                List<Question> questions = questionRepository.findAll();
+                for (Question currQuestion: questions) {
+                    if(currQuestion.isOpen()){
+                        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+                    }
+                }
+                Question currQuestion = questionRepository.findById(question.getId()).get();
+                currQuestion.setOpen(true);
+                questionRepository.save(currQuestion);
+                return new ResponseEntity<>(currQuestion, HttpStatus.OK);
+            }else {
+                return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/close")
+    public ResponseEntity<Question> closeQuestion(@RequestBody QuestionRequestModel questionRequestModel) {
+        try {
+            User user = questionRequestModel.getUser();
+            Question question = questionRequestModel.getQuestion();
+            if (user == null || question == null){
+                return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+            if (verifyUser(user, 50)){
+                Question currQuestion = questionRepository.findById(question.getId()).get();
+                currQuestion.setOpen(false);
+                questionRepository.save(currQuestion);
+                return new ResponseEntity<>(currQuestion, HttpStatus.OK);
             }else {
                 return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
             }

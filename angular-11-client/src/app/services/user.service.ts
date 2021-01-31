@@ -29,6 +29,10 @@ export class UserService {
     return this.http.put(baseUrl + '/user/' + mail, data);
   }
 
+  getHasVoted(data: any): Observable<any> {
+      return this.http.put(baseUrl + '/getHasVoted', data);
+    }
+
   create(data: any): Observable<any> {
     return this.http.post(baseUrl + '/user/add', data);
   }

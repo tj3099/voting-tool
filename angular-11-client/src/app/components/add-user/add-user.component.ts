@@ -11,7 +11,9 @@ export class AddUserComponent implements OnInit {
   user: User = {
     mail: '',
     secretKey: '',
-    hasVoted: false
+    hasVoted: false,
+    sessionId: '',
+    grants: 0
   };
   submitted = false;
 
@@ -22,7 +24,7 @@ export class AddUserComponent implements OnInit {
 
   saveUser(): void {
     const data = {
-    userToAdd: {
+    user: {
       mail: this.user.mail,
       secretKey: this.user.secretKey
     },
@@ -48,7 +50,9 @@ export class AddUserComponent implements OnInit {
     this.user = {
       mail: '',
       secretKey: '',
-      hasVoted: false
+      hasVoted: false,
+      sessionId: '',
+      grants: 0
     };
   }
 

@@ -1,0 +1,36 @@
+<h3>All questions</h3>
+<div *ngIf="alert.message != ''">
+  <div [class]="alert.type" role="alert">{{ alert.message }}</div>
+</div>
+<p>For logical issues, there just can be one open question a time. Make sure, all questions are closes,
+  when you want to open a new one!</p>
+<table class="table">
+  <thead>
+  <tr>
+    <th scope="col">#</th>
+    <th scope="col">Title</th>
+    <th scope="col">Description</th>
+    <th scope="col">Yes</th>
+    <th scope="col">No</th>
+    <th scope="col">Abstention</th>
+    <th scope="col">Open/Close</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor = "let question of questions">
+      <td>{{ question.id }}</td>
+      <td>{{ question.title }}</td>
+      <td>{{ question.description }}</td>
+      <td>{{ question.votesYes }}</td>
+      <td>{{ question.votesNo }}</td>
+      <td>{{ question.noVotes }}</td>
+      <td>
+        <button *ngIf = "question.open"  class="btn btn-danger btn-lg btn-block" (click)="close(question)">Close</button>
+        <button *ngIf = "!question.open"  class="btn btn-success btn-lg btn-block" (click)="open(question)">Open</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<button (click)="refresh()" class="btn btn-info btn-lg btn-block">Refresh</button>
+<br>
+<br>

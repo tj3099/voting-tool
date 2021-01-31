@@ -25,35 +25,34 @@ public class VoteController {
     QuestionRepository questionRepository;
 
     @PostMapping("/vote")
-    public ResponseEntity<User> vote(@RequestBody VoteRequestModel voteRequestModel) {
+    public ResponseEntity<Boolean> vote(@RequestBody VoteRequestModel voteRequestModel) {
         try {
             User user = voteRequestModel.getUser();
             Vote vote = voteRequestModel.getVote();
-            if (user != null || vote != null){
+            User requestedUser = userRepository.findByMail(user.getMail());
+            if (user == null || vote == null){
                 return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
             }
-            if (verifyUser(user, 0)){
+            if (verifyUser(user, 0) && !requestedUser.isHasVoted()){
                 Optional<Question> question = questionRepository.findById(vote.getId());
-                if (!question.isPresent()) {
+                if (!question.isPresent() || !question.get().isOpen()) {
                     return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
                 }
-                if (vote.getNoVotes()){
-                    question.get().addNoVote();
-                }else if (vote.getVotesYes()){
-                    question.get().addVoteYes();
-                }else if (vote.getVotesNo()){
-                    question.get().addVoteNo();
+                switch (vote.getVote()){
+                    case ("yes"): question.get().addVoteYes(); break;
+                    case ("no"): question.get().addVoteNo(); break;
+                    default: question.get().addNoVote();
                 }
-                User requestedUser = userRepository.findByMail(user.getMail());
                 requestedUser.setHasVoted(true);
                 userRepository.save(requestedUser);
                 questionRepository.save(question.get());
-                return new ResponseEntity<>(user, HttpStatus.OK);
+                user.setHasVoted(true);
+                return new ResponseEntity<>(user.isHasVoted(), HttpStatus.OK);
             }else {
-                return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+                return new ResponseEntity<>(false, HttpStatus.FORBIDDEN);
             }
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

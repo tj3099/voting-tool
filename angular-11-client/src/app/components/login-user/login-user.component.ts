@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { User } from 'src/app/models/user.model';
 import { UserService } from 'src/app/services/user.service';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+
 
 interface Alert {
   type: string;
@@ -15,7 +17,7 @@ interface Alert {
 })
 export class LoginUserComponent implements OnInit {
   myUser: User = {
-    mail: '',
+    mail: localStorage.getItem('mail'),
     secretKey: '',
     hasVoted: false,
     sessionId: '',
@@ -24,7 +26,14 @@ export class LoginUserComponent implements OnInit {
 
   alert: Alert;
 
-  constructor(private userService: UserService, private router: Router) { }
+  loggedIn: boolean = false;
+
+  constructor(private userService: UserService, private router: Router) {
+      this.alert = {
+        type: 'alert alert-success',
+        message: ''
+      }
+  }
 
   ngOnInit(): void {
   }
@@ -40,6 +49,7 @@ export class LoginUserComponent implements OnInit {
           this.myUser = response;
           localStorage.setItem('sessionId', this.myUser.sessionId);
           localStorage.setItem('mail', this.myUser.mail);
+          this.loggedIn = true;
           if(this.myUser.grants === 99){
             this.router.navigateByUrl('/admin');
           }
@@ -48,7 +58,6 @@ export class LoginUserComponent implements OnInit {
             type: 'alert alert-success',
             message: 'You are logged in!'
           }
-              this.router.navigateByUrl('/login');
           }
         },
         error => {
@@ -74,9 +83,13 @@ export class LoginUserComponent implements OnInit {
               type: 'alert alert-success',
               message: 'You are logged out!'
             };
+            this.loggedIn = false;
             this.myUser = {
               mail: "",
-              secretKey: ""
+              secretKey: "",
+              hasVoted: false,
+              sessionId: '',
+              grants: 0
             };
           },
           error => {

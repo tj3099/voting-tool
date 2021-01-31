@@ -41,6 +41,7 @@ public class UserController {
 				requestedUser.setSessionId(uuid.toString());
 				userRepository.save(requestedUser);
 				user.setGrants(requestedUser.getGrants());
+				user.setHasVoted(requestedUser.isHasVoted());
 				return new ResponseEntity<>(user, HttpStatus.OK);
 			}else {
 				return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
@@ -79,6 +80,22 @@ public class UserController {
 				}
 
 				return new ResponseEntity<>(users, HttpStatus.OK);
+			} catch (Exception e) {
+				return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		}else {
+			return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+		}
+	}
+
+	@PutMapping("/getHasVoted")
+	public ResponseEntity<Boolean> getHasVoted(@RequestBody User callingUser) {
+		if(verifyUser(callingUser, 0)) {
+			try {
+
+				User user = userRepository.findByMail(callingUser.getMail());
+
+				return new ResponseEntity<>(user.isHasVoted(), HttpStatus.OK);
 			} catch (Exception e) {
 				return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 			}
@@ -134,6 +151,7 @@ public class UserController {
 			for (User user : users) {
 				user.setHasVoted(hasVoted);
 			}
+			userRepository.saveAll(users);
 			return new ResponseEntity<>("Reseted Voting", HttpStatus.OK);
 		}else {
 			return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);

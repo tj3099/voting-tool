@@ -1,3 +1,5 @@
+<a routerLink="/admin" class="nav-link">Admin Center</a>
+
 <div>
   <div *ngIf="currentUser.mail" class="edit-form">
     <h4>User</h4>
@@ -33,13 +35,6 @@
       Delete
     </button>
 
-    <button
-      type="submit"
-      class="badge badge-success mb-2"
-      (click)="updateUser()"
-    >
-      Update
-    </button>
     <p>{{ message }}</p>
   </div>
 

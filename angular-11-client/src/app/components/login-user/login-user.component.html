@@ -1,4 +1,4 @@
-<div *ngIf="alert != null">
+<div *ngIf="alert.message != ''">
   <div [class]="alert.type" role="alert">{{ alert.message }}</div>
 </div>
 
@@ -13,6 +13,7 @@
           required
           [(ngModel)]="myUser.mail"
           name="mail"
+          [attr.disabled]="loggedIn ? '' : null"
         />
       </div>
 
@@ -24,11 +25,16 @@
           required
           [(ngModel)]="myUser.secretKey"
           name="secretKey"
+          [attr.disabled]="loggedIn ? '' : null"
         />
       </div>
 
-    <button (click)="loginUser()" class="btn btn-success btn-lg btn-block">Login</button>
-    <button (click)="logoutUser()" class="btn btn-danger btn-lg btn-block">Logout</button>
+    <button *ngIf="!loggedIn" (click)="loginUser()" class="btn btn-success btn-lg btn-block">Login</button>
+    <button *ngIf="loggedIn" (click)="logoutUser()" class="btn btn-danger btn-lg btn-block">Logout</button>
 
+
+  </div>
+  <div *ngIf="loggedIn">
+    <app-vote [user]="myUser"></app-vote>
   </div>
 </div>
