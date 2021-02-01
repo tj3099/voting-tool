@@ -1,0 +1,52 @@
+<br>
+<div *ngIf = "user.hasVoted">
+  <h3>{{ user.mail }} has already voted</h3>
+</div>
+<div *ngIf = "!user.hasVoted">
+  <h3>Vote now as {{ user.mail }}</h3>
+</div>
+<p>When a new question is opened, please press "Load". You can select the option, you want to vote. Click vote for sending.
+  <br>You only have one vote per user. If you want to vote for another user,
+  please log out, and log in again, with the other mail and secret key.</p>
+<br>
+<button (click)="refreshData()" class="btn btn-info btn-lg btn-block">Load</button>
+<div *ngIf="alert.message != ''">
+  <div [class]="alert.type" role="alert">{{ alert.message }}</div>
+</div>
+<table *ngIf = "votingList.question && !user.hasVoted" class="table">
+  <thead>
+  <tr>
+    <th scope="col">#</th>
+    <th scope="col">Title</th>
+    <th scope="col">Description</th>
+    <th scope="col">Vote</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+    <td>{{ votingList.question.id }}</td>
+    <td>{{ votingList.question.title }}</td>
+    <td>{{ votingList.question.description }}</td>
+    <td class="overflow-hidden">
+      <div class="btn-group" role="group" aria-label="Basic example">
+        <button type="button" (click)="setYes()" class="btn btn-info">Yes</button>
+        <button type="button" (click)="setNo()" class="btn btn-info">No</button>
+        <button type="button" (click)="setAbstention()" class="btn btn-secondary">Abstention</button>
+      </div>
+      <br>
+      Selected: {{ votingList.selected }}
+    </td>
+  </tr>
+  </tbody>
+</table>
+<div *ngIf = "votingList.question && !user.hasVoted">
+    <label for="check"> I'm sure to vote as selected above!
+      <input id="check" [(ngModel)]="checked" [hidden]="false"  type="checkbox">
+    </label>
+    <button *ngIf = "checked && votingList.selected" (click)="vote()" class="btn btn-success btn-lg btn-block">Vote for: {{ votingList.selected }}</button>
+</div>
+<br>
+<br>
+<br>
+<br>
+
