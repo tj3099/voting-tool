@@ -31,8 +31,8 @@ export class UserDetailsComponent implements OnInit {
 
   getUser(id: string): void {
   const data = {
-      mail: localStorage.getItem('mail'),
-      sessionId: localStorage.getItem('sessionId')
+      mail: localStorage.getItem('mail') || '',
+       sessionId: localStorage.getItem('sessionId') || '',
     }
     this.UserService.get(data, id)
       .subscribe(
@@ -47,8 +47,8 @@ export class UserDetailsComponent implements OnInit {
 
   deleteUser(): void {
     const data = {
-        mail: localStorage.getItem('mail'),
-        sessionId: localStorage.getItem('sessionId')
+        mail: localStorage.getItem('mail') || '',
+         sessionId: localStorage.getItem('sessionId') || '',
     }
     this.UserService.delete(data, this.currentUser.mail)
       .subscribe(

@@ -23,8 +23,8 @@ export class UsersListComponent implements OnInit {
 
   retrieveUsers(): void {
   const data = {
-    mail: localStorage.getItem('mail'),
-    sessionId: localStorage.getItem('sessionId')
+    mail: localStorage.getItem('mail') || '',
+     sessionId: localStorage.getItem('sessionId') || '',
   }
   console.log(data);
     this.UserService.getAll(data)
@@ -45,8 +45,8 @@ export class UsersListComponent implements OnInit {
 
   removeAllUsers(): void {
   const data = {
-      mail: localStorage.getItem('mail'),
-      sessionId: localStorage.getItem('sessionId')
+      mail: localStorage.getItem('mail') || '',
+       sessionId: localStorage.getItem('sessionId') || '',
     }
     this.UserService.deleteAll(data)
       .subscribe(
@@ -61,8 +61,8 @@ export class UsersListComponent implements OnInit {
 
   resetHasVoted(): void {
   const data = {
-      mail: localStorage.getItem('mail'),
-      sessionId: localStorage.getItem('sessionId')
+      mail: localStorage.getItem('mail') || '',
+       sessionId: localStorage.getItem('sessionId') || '',
     }
     this.UserService.resetVoting(data, false)
       .subscribe(

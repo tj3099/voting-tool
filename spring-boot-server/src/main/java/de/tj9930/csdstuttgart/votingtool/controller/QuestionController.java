@@ -5,6 +5,8 @@ import de.tj9930.csdstuttgart.votingtool.model.QuestionRequestModel;
 import de.tj9930.csdstuttgart.votingtool.model.User;
 import de.tj9930.csdstuttgart.votingtool.repository.QuestionRepository;
 import de.tj9930.csdstuttgart.votingtool.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/questions")
 public class QuestionController {
+
+    Logger logger = LoggerFactory.getLogger(QuestionController.class);
 
     @Autowired
     UserRepository userRepository;
@@ -60,8 +64,10 @@ public class QuestionController {
                 Question currQuestion = questionRepository.findById(question.getId()).get();
                 currQuestion.setOpen(true);
                 questionRepository.save(currQuestion);
+                logger.info("Question: [" + currQuestion.toString() + "] was opened by " + user.getMail());
                 return new ResponseEntity<>(currQuestion, HttpStatus.OK);
             }else {
+                logger.info("Question: [" + question.toString() + "] could not be opened by " + user.getMail() + ": forbidden!!");
                 return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
             }
         } catch (Exception e) {
@@ -81,8 +87,10 @@ public class QuestionController {
                 Question currQuestion = questionRepository.findById(question.getId()).get();
                 currQuestion.setOpen(false);
                 questionRepository.save(currQuestion);
+                logger.info("Question: [" + currQuestion.toString() + "] was closed by " + user.getMail());
                 return new ResponseEntity<>(currQuestion, HttpStatus.OK);
             }else {
+                logger.info("Question: " + question.getId() + " could not be closed by " + user.getMail() + ": forbidden!!");
                 return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
             }
         } catch (Exception e) {

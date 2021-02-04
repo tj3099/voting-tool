@@ -9,7 +9,7 @@
         <module name="spring-boot-data-jpa" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
+    <bytecodeTargetLevel target="8">
       <module name="spring-boot-data-jpa" target="11" />
     </bytecodeTargetLevel>
   </component>

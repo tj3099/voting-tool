@@ -41,8 +41,8 @@ export class QuestionListComponent implements OnInit {
   const data = {
        question: currQuestion,
        user: {
-        mail: localStorage.getItem('mail'),
-        sessionId: localStorage.getItem('sessionId')
+        mail: localStorage.getItem('mail') || '',
+         sessionId: localStorage.getItem('sessionId') || '',
        }
       }
       this.questionService.open(data)
@@ -67,8 +67,8 @@ export class QuestionListComponent implements OnInit {
       const data = {
              question: currQuestion,
              user: {
-              mail: localStorage.getItem('mail'),
-              sessionId: localStorage.getItem('sessionId')
+              mail: localStorage.getItem('mail') || '',
+               sessionId: localStorage.getItem('sessionId') || '',
             }
       }
       this.questionService.close(data)

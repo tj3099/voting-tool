@@ -96,4 +96,10 @@ public class Question {
     public void addVoteNo() {
         this.votesNo++;
     }
+
+    @Override
+    public String toString(){
+        return "ID: " + getId() + " Title: " + getTitle() + " Description: " + getDescription() +
+                " YES: " + getVotesYes() + " NO: " + getVotesNo() + " DID NOT VOTE: " + getNoVotes();
+      }
 }

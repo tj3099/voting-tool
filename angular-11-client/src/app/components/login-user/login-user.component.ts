@@ -17,7 +17,7 @@ interface Alert {
 })
 export class LoginUserComponent implements OnInit {
   myUser: User = {
-    mail: localStorage.getItem('mail'),
+    mail: localStorage.getItem('mail') || '',
     secretKey: '',
     hasVoted: false,
     sessionId: '',
@@ -72,7 +72,7 @@ export class LoginUserComponent implements OnInit {
   logoutUser(): void {
       const data = {
         mail: this.myUser.mail,
-        sessionId: localStorage.getItem('sessionId')
+         sessionId: localStorage.getItem('sessionId') || '',
       };
       this.userService.logout(data)
         .subscribe(

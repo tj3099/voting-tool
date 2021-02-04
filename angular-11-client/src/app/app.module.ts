@@ -13,6 +13,8 @@ import { AddQuestionComponent } from './components/add-question/add-question.com
 import { QuestionListComponent } from './components/question-list/question-list.component';
 import { VoteComponent } from './components/vote/vote.component';
 
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -33,4 +35,6 @@ import { VoteComponent } from './components/vote/vote.component';
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+
+}

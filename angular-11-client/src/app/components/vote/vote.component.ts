@@ -24,7 +24,7 @@ interface VotingModel {
 export class VoteComponent implements OnInit {
 
   @Input()
-  user: User;
+  user: User = new User();
 
   alert: Alert;
 
@@ -62,7 +62,7 @@ export class VoteComponent implements OnInit {
           console.log(error);
         });
         if(this.user){
-          this.user.sessionId = localStorage.getItem('sessionId');
+          this.user.sessionId = localStorage.getItem('sessionId') || '';
           this.userService.getHasVoted(this.user)
             .subscribe(
               response => {
@@ -82,8 +82,8 @@ export class VoteComponent implements OnInit {
   }
   const data = {
     user: {
-      mail: localStorage.getItem('mail'),
-      sessionId: localStorage.getItem('sessionId')
+      mail: localStorage.getItem('mail') || '',
+       sessionId: localStorage.getItem('sessionId') || '',
     },
     vote: myVote
   };
@@ -92,6 +92,10 @@ export class VoteComponent implements OnInit {
           response => {
           if(this.user){
             this.user.hasVoted = response;
+          }
+          this.alert = {
+            message: 'You successfully voted! Thanks!',
+            type: 'alert alert-success'
           }
           },
           error => {
