@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { User } from 'src/app/models/user.model';
 import { UserService } from 'src/app/services/user.service';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-users-list',
@@ -14,11 +15,17 @@ export class UsersListComponent implements OnInit {
   currentIndex = -1;
   title = '';
   message = '';
+  isAdmin: boolean = false;
 
-  constructor(private UserService: UserService) { }
+  constructor(private UserService: UserService,  private router: Router) { }
 
   ngOnInit(): void {
-    this.retrieveUsers();
+    this.getGrants();
+    if(this.isAdmin){
+      this.retrieveUsers();
+    }else{
+      this.router.navigateByUrl('/login');
+    }
   }
 
   retrieveUsers(): void {
@@ -74,5 +81,25 @@ export class UsersListComponent implements OnInit {
           console.log(error);
         });
   }
+
+  getGrants(): void {
+    const data = {
+        mail: localStorage.getItem('mail') || '',
+        sessionId: localStorage.getItem('sessionId') || '',
+      }
+      this.UserService.getGrants(data)
+        .subscribe(
+          response => {
+            if(response && response <= 99){
+              this.isAdmin = true;
+            }else{
+              this.isAdmin = false;
+            }
+          },
+          error => {
+            console.log(error);
+            this.isAdmin = false;
+          });
+    }
 
 }

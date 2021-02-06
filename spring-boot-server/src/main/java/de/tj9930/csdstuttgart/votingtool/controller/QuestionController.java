@@ -2,8 +2,8 @@ package de.tj9930.csdstuttgart.votingtool.controller;
 
 import de.tj9930.csdstuttgart.votingtool.model.Question;
 import de.tj9930.csdstuttgart.votingtool.model.QuestionRequestModel;
-import de.tj9930.csdstuttgart.votingtool.model.User;
 import de.tj9930.csdstuttgart.votingtool.repository.QuestionRepository;
+import de.tj9930.csdstuttgart.votingtool.model.User;
 import de.tj9930.csdstuttgart.votingtool.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

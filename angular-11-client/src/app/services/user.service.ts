@@ -51,4 +51,8 @@ export class UserService {
     return this.http.delete(baseUrl + '/user/resetAll/', data);
   }
 
+  getGrants(data: any): Observable<any> {
+    return this.http.put(baseUrl + '/user/getGrants/', data);
+  }
+
 }

@@ -3,6 +3,7 @@ import { User } from 'src/app/models/user.model';
 import { UserService } from 'src/app/services/user.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { environment } from './../../../environments/environment';
 
 
 interface Alert {
@@ -25,6 +26,7 @@ export class LoginUserComponent implements OnInit {
   };
 
   alert: Alert;
+  texts: any = environment.texts;
 
   loggedIn: boolean = false;
 
@@ -56,7 +58,7 @@ export class LoginUserComponent implements OnInit {
           if(this.myUser.grants == 0){
           this.alert = {
             type: 'alert alert-success',
-            message: 'You are logged in!'
+            message: this.texts.login.alert.success
           }
           }
         },
@@ -64,7 +66,7 @@ export class LoginUserComponent implements OnInit {
           console.log(error);
           this.alert = {
             type: 'alert alert-danger',
-            message: 'Login not possible. Please check credentials!'
+            message: this.texts.login.alert.error
           }
         });
   }
@@ -81,7 +83,7 @@ export class LoginUserComponent implements OnInit {
             localStorage.clear();
             this.alert = {
               type: 'alert alert-success',
-              message: 'You are logged out!'
+              message: this.texts.login.alert.logout
             };
             this.loggedIn = false;
             this.myUser = {

@@ -5,6 +5,7 @@ import { QuestionService } from 'src/app/services/question.service';
 import { VoteService } from 'src/app/services/vote.service';
 import { UserService } from 'src/app/services/user.service';
 import { CommonModule } from '@angular/common';
+import { environment } from './../../../environments/environment';
 
 interface Alert {
   type: string;
@@ -27,6 +28,7 @@ export class VoteComponent implements OnInit {
   user: User = new User();
 
   alert: Alert;
+  texts: any = environment.texts;
 
   checked: boolean = false;
 
@@ -94,7 +96,7 @@ export class VoteComponent implements OnInit {
             this.user.hasVoted = response;
           }
           this.alert = {
-            message: 'You successfully voted! Thanks!',
+            message: this.texts.vote.alert.success,
             type: 'alert alert-success'
           }
           },

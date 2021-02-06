@@ -1,8 +1,8 @@
 package de.tj9930.csdstuttgart.votingtool.controller;
 
+import de.tj9930.csdstuttgart.votingtool.repository.UserRepository;
 import de.tj9930.csdstuttgart.votingtool.model.User;
 import de.tj9930.csdstuttgart.votingtool.model.UserForLogedinRequest;
-import de.tj9930.csdstuttgart.votingtool.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,15 +20,15 @@ public class UserController {
 	@Autowired
 	UserRepository userRepository;
 
-	@GetMapping("/init")
-	public ResponseEntity<List<User>> getAllUsers() {
-		User admin = new User("admin", "admin", false, 99);
-		User user = new User("user", "user", false, 0);
+	@PutMapping("/getGrants")
+	public ResponseEntity<Integer> getGrants(@RequestBody User user) {
+		if(verifyUser(user, 0)){
+			user = userRepository.findByMail(user.getMail());
+		}
 
-		userRepository.save(admin);
-		userRepository.save(user);
-		return new ResponseEntity<>(userRepository.findAll(), HttpStatus.OK);
+		return new ResponseEntity<Integer>(user.getGrants(), HttpStatus.OK);
 	}
+
 
 
 	@PostMapping("/user/login")
