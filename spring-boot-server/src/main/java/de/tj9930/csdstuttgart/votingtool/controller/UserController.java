@@ -20,7 +20,7 @@ public class UserController {
 	@Autowired
 	UserRepository userRepository;
 
-	@PutMapping("/getGrants")
+	@PutMapping("/user/getGrants")
 	public ResponseEntity<Integer> getGrants(@RequestBody User user) {
 		if(verifyUser(user, 0)){
 			user = userRepository.findByMail(user.getMail());
@@ -29,6 +29,15 @@ public class UserController {
 		return new ResponseEntity<Integer>(user.getGrants(), HttpStatus.OK);
 	}
 
+	@GetMapping("/init")
+	public ResponseEntity<List<User>> getAllUsers() {
+		User admin = new User("admin", "admin", false, 99);
+		User user = new User("user", "user", false, 0);
+
+		userRepository.save(admin);
+		userRepository.save(user);
+		return new ResponseEntity<>(userRepository.findAll(), HttpStatus.OK);
+	}
 
 
 	@PostMapping("/user/login")

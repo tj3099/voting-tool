@@ -21,11 +21,7 @@ export class UsersListComponent implements OnInit {
 
   ngOnInit(): void {
     this.getGrants();
-    if(this.isAdmin){
-      this.retrieveUsers();
-    }else{
-      this.router.navigateByUrl('/login');
-    }
+
   }
 
   retrieveUsers(): void {
@@ -94,6 +90,11 @@ export class UsersListComponent implements OnInit {
               this.isAdmin = true;
             }else{
               this.isAdmin = false;
+            }
+            if(this.isAdmin){
+              this.retrieveUsers();
+            }else{
+              this.router.navigateByUrl('/login');
             }
           },
           error => {

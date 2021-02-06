@@ -52,7 +52,7 @@ export class UserService {
   }
 
   getGrants(data: any): Observable<any> {
-    return this.http.put(baseUrl + '/user/getGrants/', data);
+    return this.http.put(baseUrl + '/user/getGrants', data);
   }
 
 }

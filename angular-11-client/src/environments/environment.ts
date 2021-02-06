@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:8080/api',
+  apiUrl: 'https://localhost:8443/api',
   texts: {
       welcome: '<h3> Welcome to this awesome tool!</h3>',
       buttons: {
@@ -14,7 +14,7 @@ export const environment = {
           logout: 'Logout'
         }, form: {
           mail: 'Mail',
-          secretKey: 'password',
+          secretKey: 'secret key',
           tooltipKey: 'Your password',
           tooltipMail: 'Your mail'
         },

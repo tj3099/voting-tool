@@ -16,8 +16,8 @@ export const environment = {
             logout: 'Abmelden'
           }, form: {
             mail: 'E-Mail',
-            secretKey: 'Passwort',
-            tooltipKey: 'Das Passwort mit der Anmeldungsbestätigung zu der Mitgliederversammlung per Mail versendet.',
+            secretKey: 'Schlüssel',
+            tooltipKey: 'Der Schlüssel wurde mit der Anmeldungsbestätigung zu der Mitgliederversammlung per Mail versandt.',
             tooltipMail: 'Bitte nutze die E-Mail Adresse, die du bei der Anmeldung zur Mitgliederversammlung angegeben hast.'
           },
           alert: {
