@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { UsersListComponent } from './components/admin-view/users-list.component';
+import { UsersListComponent } from './components/admin-view/admin-view.component';
 import { UserDetailsComponent } from './components/user-details/user-details.component';
 import { AddUserComponent } from './components/add-user/add-user.component';
 import { LoginUserComponent } from './components/login-user/login-user.component';

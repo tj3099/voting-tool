@@ -1,10 +1,11 @@
 package de.tj9930.csdstuttgart.votingtool.controller;
 
 import de.tj9930.csdstuttgart.votingtool.model.Question;
-import de.tj9930.csdstuttgart.votingtool.model.QuestionRequestModel;
+import de.tj9930.csdstuttgart.votingtool.model.QuestionRequest;
 import de.tj9930.csdstuttgart.votingtool.repository.QuestionRepository;
 import de.tj9930.csdstuttgart.votingtool.model.User;
 import de.tj9930.csdstuttgart.votingtool.repository.UserRepository;
+import de.tj9930.csdstuttgart.votingtool.services.VerifyUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin
 @RestController
 @RequestMapping("/api/questions")
 public class QuestionController {
@@ -27,15 +28,18 @@ public class QuestionController {
     @Autowired
     QuestionRepository questionRepository;
 
+    @Autowired
+    VerifyUserService verifyUserService;
+
     @PostMapping("/add")
-    public ResponseEntity<Question> addQuestion(@RequestBody QuestionRequestModel questionRequestModel) {
+    public ResponseEntity<Question> addQuestion(@RequestBody QuestionRequest questionRequest) {
         try {
-            User user = questionRequestModel.getUser();
-            Question question = questionRequestModel.getQuestion();
+            User user = questionRequest.getUser();
+            Question question = questionRequest.getQuestion();
             if (user == null || question == null){
                 return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
             }
-            if (verifyUser(user, 50)){
+            if (verifyUserService.verifyUser(user, 50)){
                 questionRepository.save(question);
                 return new ResponseEntity<>(question, HttpStatus.OK);
             }else {
@@ -47,14 +51,14 @@ public class QuestionController {
     }
 
     @PutMapping("/open")
-    public ResponseEntity<Question> openQuestion(@RequestBody QuestionRequestModel questionRequestModel) {
+    public ResponseEntity<Question> openQuestion(@RequestBody QuestionRequest questionRequest) {
         try {
-            User user = questionRequestModel.getUser();
-            Question question = questionRequestModel.getQuestion();
+            User user = questionRequest.getUser();
+            Question question = questionRequest.getQuestion();
             if (user == null || question == null){
                 return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
             }
-            if (verifyUser(user, 50)){
+            if (verifyUserService.verifyUser(user, 50)){
                 List<Question> questions = questionRepository.findAll();
                 for (Question currQuestion: questions) {
                     if(currQuestion.isOpen()){
@@ -76,14 +80,14 @@ public class QuestionController {
     }
 
     @PutMapping("/close")
-    public ResponseEntity<Question> closeQuestion(@RequestBody QuestionRequestModel questionRequestModel) {
+    public ResponseEntity<Question> closeQuestion(@RequestBody QuestionRequest questionRequest) {
         try {
-            User user = questionRequestModel.getUser();
-            Question question = questionRequestModel.getQuestion();
+            User user = questionRequest.getUser();
+            Question question = questionRequest.getQuestion();
             if (user == null || question == null){
                 return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
             }
-            if (verifyUser(user, 50)){
+            if (verifyUserService.verifyUser(user, 50)){
                 Question currQuestion = questionRepository.findById(question.getId()).get();
                 currQuestion.setOpen(false);
                 questionRepository.save(currQuestion);
@@ -118,12 +122,4 @@ public class QuestionController {
         }
     }
 
-    public boolean verifyUser(User user, int grants){
-        User requestedUser = userRepository.findByMail(user.getMail());
-        if (requestedUser != null && requestedUser.getMail().equals(user.getMail()) && requestedUser.getSessionId().equals(user.getSessionId())
-                && requestedUser.getGrants() >= grants){
-            return true;
-        }
-        return false;
-    }
 }

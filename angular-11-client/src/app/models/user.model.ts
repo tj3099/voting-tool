@@ -4,5 +4,6 @@ export class User {
   hasVoted?: boolean = false;
   sessionId: string = '';
   grants: number = 0;
+  active?: boolean = true;
 }
 

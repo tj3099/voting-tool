@@ -6,6 +6,7 @@ import de.tj9930.csdstuttgart.votingtool.model.Vote;
 import de.tj9930.csdstuttgart.votingtool.model.VoteRequestModel;
 import de.tj9930.csdstuttgart.votingtool.repository.QuestionRepository;
 import de.tj9930.csdstuttgart.votingtool.repository.UserRepository;
+import de.tj9930.csdstuttgart.votingtool.services.VerifyUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin
 @RestController
 @RequestMapping("/api/votes")
 public class VoteController {
@@ -24,6 +25,9 @@ public class VoteController {
     @Autowired
     QuestionRepository questionRepository;
 
+    @Autowired
+    VerifyUserService verifyUserService;
+
     @PostMapping("/vote")
     public ResponseEntity<Boolean> vote(@RequestBody VoteRequestModel voteRequestModel) {
         try {
@@ -33,7 +37,8 @@ public class VoteController {
             if (user == null || vote == null){
                 return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
             }
-            if (verifyUser(user, 0) && !requestedUser.isHasVoted()){
+            // User with higher rights then 0 are not allowed to vote
+            if (verifyUserService.verifyUser(user, 0) && !requestedUser.isHasVoted() && !verifyUserService.verifyUser(user, 50)){
                 Optional<Question> question = questionRepository.findById(vote.getId());
                 if (!question.isPresent() || !question.get().isOpen()) {
                     return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -41,7 +46,8 @@ public class VoteController {
                 switch (vote.getVote()){
                     case ("yes"): question.get().addVoteYes(); break;
                     case ("no"): question.get().addVoteNo(); break;
-                    default: question.get().addNoVote();
+                    case ("abstention"): question.get().addNoVote(); break;
+                    default: return new ResponseEntity<>(false, HttpStatus.NOT_ACCEPTABLE);
                 }
                 requestedUser.setHasVoted(true);
                 userRepository.save(requestedUser);
@@ -56,13 +62,4 @@ public class VoteController {
         }
     }
 
-
-    public boolean verifyUser(User user, int grants){
-        User requestedUser = userRepository.findByMail(user.getMail());
-        if (requestedUser != null && requestedUser.getMail().equals(user.getMail()) && requestedUser.getSessionId().equals(user.getSessionId())
-                && requestedUser.getGrants() >= grants){
-            return true;
-        }
-        return false;
-    }
 }

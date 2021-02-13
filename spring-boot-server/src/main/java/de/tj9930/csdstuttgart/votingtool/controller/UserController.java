@@ -1,9 +1,14 @@
 package de.tj9930.csdstuttgart.votingtool.controller;
 
+import de.tj9930.csdstuttgart.votingtool.model.UserlistRequest;
 import de.tj9930.csdstuttgart.votingtool.repository.UserRepository;
 import de.tj9930.csdstuttgart.votingtool.model.User;
 import de.tj9930.csdstuttgart.votingtool.model.UserForLogedinRequest;
+import de.tj9930.csdstuttgart.votingtool.services.VerifyUserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,17 +17,29 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin
 @RestController
 @RequestMapping("/api")
 public class UserController {
 
+	Logger logger = LoggerFactory.getLogger(QuestionController.class);
+
+
+	@Value("${vote.doinit}")
+	private boolean doinit;
+
+	@Value("${vote.password}")
+	private String password;
+
 	@Autowired
 	UserRepository userRepository;
 
+	@Autowired
+	VerifyUserService verifyUserService;
+
 	@PutMapping("/user/getGrants")
 	public ResponseEntity<Integer> getGrants(@RequestBody User user) {
-		if(verifyUser(user, 0)){
+		if(verifyUserService.verifyUser(user, 0)){
 			user = userRepository.findByMail(user.getMail());
 		}
 
@@ -31,12 +48,15 @@ public class UserController {
 
 	@GetMapping("/init")
 	public ResponseEntity<List<User>> getAllUsers() {
-		User admin = new User("admin", "admin", false, 99);
-		User user = new User("user", "user", false, 0);
+		if(this.doinit){
+			User admin = new User("admin", this.password, false, 99, true);
+			User user = new User("user", "user", false, 0, false);
 
-		userRepository.save(admin);
-		userRepository.save(user);
-		return new ResponseEntity<>(userRepository.findAll(), HttpStatus.OK);
+			userRepository.save(admin);
+			userRepository.save(user);
+			return new ResponseEntity<>(userRepository.findAll(), HttpStatus.OK);
+		}
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 
@@ -51,6 +71,7 @@ public class UserController {
 				userRepository.save(requestedUser);
 				user.setGrants(requestedUser.getGrants());
 				user.setHasVoted(requestedUser.isHasVoted());
+				user.setActive(requestedUser.isActive());
 				return new ResponseEntity<>(user, HttpStatus.OK);
 			}else {
 				return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
@@ -78,7 +99,7 @@ public class UserController {
 
 	@PutMapping("/user")
 	public ResponseEntity<List<User>> getAllUsers(@RequestBody User callingUser) {
-		if(verifyUser(callingUser, 99)) {
+		if(verifyUserService.verifyUser(callingUser, 99)) {
 			try {
 				List<User> users = new ArrayList<User>();
 
@@ -99,7 +120,7 @@ public class UserController {
 
 	@PutMapping("/getHasVoted")
 	public ResponseEntity<Boolean> getHasVoted(@RequestBody User callingUser) {
-		if(verifyUser(callingUser, 0)) {
+		if(verifyUserService.verifyUser(callingUser, 0)) {
 			try {
 
 				User user = userRepository.findByMail(callingUser.getMail());
@@ -115,7 +136,7 @@ public class UserController {
 
 	@PutMapping("/user/{mail}")
 	public ResponseEntity<User> getUserByMail(@PathVariable("mail") String mail, @RequestBody User callingUser) {
-		if(verifyUser(callingUser, 99)) {
+		if(verifyUserService.verifyUser(callingUser, 99)) {
 			User user = userRepository.findByMail(mail);
 			if (user != null) {
 				return new ResponseEntity<>(user, HttpStatus.OK);
@@ -130,13 +151,13 @@ public class UserController {
 	@PostMapping("/user/add")
 	public ResponseEntity<User> createUser(@RequestBody UserForLogedinRequest userForLogedinRequest) {
 		User callingUser = userForLogedinRequest.getCallingUser();
-		if(verifyUser(callingUser, 99)) {
+		if(verifyUserService.verifyUser(callingUser, 99)) {
 			try {
 				User userToBeAdded = userForLogedinRequest.getUser();
 				User _user;
 				if (userToBeAdded.getGrants() != null) {
 					_user = userRepository
-							.save(new User(userToBeAdded.getMail(), userToBeAdded.getSecretKey(), false, userToBeAdded.getGrants()));
+							.save(new User(userToBeAdded.getMail(), userToBeAdded.getSecretKey(), false, userToBeAdded.getGrants(), userToBeAdded.isActive()));
 
 				} else {
 					_user = userRepository
@@ -154,7 +175,7 @@ public class UserController {
 
 	@PutMapping("/user/resetVoting/{hasVoted}")
 	public ResponseEntity<String> updateVoting(@PathVariable("hasVoted")boolean hasVoted, @RequestBody User callingUser) {
-		if(verifyUser(callingUser, 99)) {
+		if(verifyUserService.verifyUser(callingUser, 99)) {
 			List<User> users = userRepository.findAll();
 
 			for (User user : users) {
@@ -167,9 +188,72 @@ public class UserController {
 		}
 	}
 
+	@PostMapping("/user/update")
+	public ResponseEntity<User> updateUser(@RequestBody UserForLogedinRequest userForLogedinRequest) {
+		User callingUser = userForLogedinRequest.getCallingUser();
+		if(verifyUserService.verifyUser(callingUser, 99)) {
+			try {
+				User userToBeUpdated = userForLogedinRequest.getUser();
+				User _user;
+				_user = userRepository.save(userToBeUpdated);
+				return new ResponseEntity<>(_user, HttpStatus.CREATED);
+			} catch (Exception e) {
+				return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		}else {
+			return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+		}
+	}
+
+	@PostMapping("/user/updateList")
+	public ResponseEntity<Boolean> updateUserList(@RequestBody UserlistRequest userlistRequest) {
+		User callingUser = userlistRequest.getCallingUser();
+		if(verifyUserService.verifyUser(callingUser, 99)) {
+			try {
+				userRepository.saveAll(userlistRequest.getUsers());
+				List<User> users = userRepository.findAll();
+				return new ResponseEntity<>(true, HttpStatus.OK);
+			} catch (Exception e) {
+				return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		}else {
+			return new ResponseEntity<>(false, HttpStatus.FORBIDDEN);
+		}
+	}
+
+	@DeleteMapping("/user/resetAll")
+	public ResponseEntity<Boolean> deleteAll(@RequestBody User user) {
+		if(verifyUserService.verifyUser(user, 99)) {
+			try {
+				user = userRepository.findByMail(user.getMail());
+				userRepository.deleteAll();
+				userRepository.save(user);
+				return new ResponseEntity<>(true, HttpStatus.OK);
+			} catch (Exception e) {
+				return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		}else {
+			return new ResponseEntity<>(false, HttpStatus.FORBIDDEN);
+		}
+	}
+
+	@DeleteMapping("/user/delete/{mail}")
+	public ResponseEntity<Boolean> delete(@PathVariable("mail")String mail, @RequestBody User user) {
+		if(verifyUserService.verifyUser(user, 99)) {
+			try {
+				userRepository.delete(userRepository.findByMail(mail));
+				return new ResponseEntity<>(true, HttpStatus.OK);
+			} catch (Exception e) {
+				return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		}else {
+			return new ResponseEntity<>(false, HttpStatus.FORBIDDEN);
+		}
+	}
+
 	@GetMapping("/user/hasNotVoted")
 	public ResponseEntity<List<User>> findByHasVoted(@RequestBody User callingUser) {
-		if(verifyUser(callingUser, 99)) {
+		if(verifyUserService.verifyUser(callingUser, 99)) {
 			try {
 				List<User> users = userRepository.findByHasVoted(false);
 
@@ -184,14 +268,4 @@ public class UserController {
 			return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
 		}
 	}
-
-	public boolean verifyUser(User user, int grants){
-		User requestedUser = userRepository.findByMail(user.getMail());
-		if (requestedUser != null && requestedUser.getMail().equals(user.getMail()) && requestedUser.getSessionId().equals(user.getSessionId())
-				&& requestedUser.getGrants() >= grants){
-			return true;
-		}
-		return false;
-	}
-
 }

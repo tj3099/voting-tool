@@ -1,41 +1,45 @@
 <div *ngIf="alert.message != ''">
-  <div [class]="alert.type" role="alert">{{ alert.message }}</div>
+  <div [class]="alert.type" role="alert">{{ alert.message }}
+  </div>
 </div>
 <div>
   <div innerHtml="{{ texts.welcome }}"></div>
   <div class="submit-form">
     <div class="form-group">
-        <label for="mail">{{ texts.login.form.mail }}</label>
-        <input
-          type="text"
-          class="form-control"
-          id="mail"
-          required
-          [(ngModel)]="myUser.mail"
-          name="mail"
-          [attr.disabled]="loggedIn ? '' : null"
-          type="email"
-          title="{{ texts.login.form.tooltipMail }}"
-        />
-      </div>
+      <label for="mail">{{ texts.login.form.mail }}</label>
+      <input
+        type="text"
+        class="form-control"
+        id="mail"
+        required
+        [(ngModel)]="myUser.mail"
+        name="mail"
+        [attr.disabled]="loggedIn ? '' : null"
+        type="email"
+        title="{{ texts.login.form.tooltipMail }}"
+      />
+    </div>
 
-    <div class="form-group">
-        <label for="secretKey">{{ texts.login.form.secretKey }}</label>
-        <input
-          class="form-control"
-          id="secretKey"
-          required
-          [(ngModel)]="myUser.secretKey"
-          name="secretKey"
-          [attr.disabled]="loggedIn ? '' : null"
-          type="text"
-          title="{{ texts.login.form.tooltipKey }}"
-        />
-      </div>
+    <div class="form-group" [hidden]="loggedIn">
+      <label for="secretKey">{{ texts.login.form.secretKey }}</label>
+      <input
+        class="form-control"
+        id="secretKey"
+        required
+        [(ngModel)]="myUser.secretKey"
+        name="secretKey"
+
+        type="text"
+        title="{{ texts.login.form.tooltipKey }}"
+      />
+    </div>
 
     <button *ngIf="!loggedIn" (click)="loginUser()" class="btn btn-success btn-lg btn-block">{{ texts.login.button.login }}</button>
     <button *ngIf="loggedIn" (click)="logoutUser()" class="btn btn-danger btn-lg btn-block">{{ texts.login.button.logout }}</button>
 
+    <div *ngIf="voteAlert.message != ''">
+      <div [class]="voteAlert.type" role="alert">{{ voteAlert.message }}</div>
+    </div>
 
   </div>
   <div *ngIf="loggedIn">

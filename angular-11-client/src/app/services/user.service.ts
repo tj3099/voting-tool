@@ -38,13 +38,17 @@ export class UserService {
     return this.http.post(baseUrl + '/user/add', data);
   }
 
+  updateList(data: any): Observable<any> {
+      return this.http.post(baseUrl + '/user/updateList', data);
+    }
+
 
   resetVoting(data: any, hasVoted: any): Observable<any> {
       return this.http.put(baseUrl + '/user/resetVoting/' + hasVoted, data);
     }
 
   delete(data: any, mail: any): Observable<any> {
-    return this.http.delete(baseUrl + '/user/' + mail);
+    return this.http.delete(baseUrl + '/user/delete/' + mail);
   }
 
   deleteAll(data: any): Observable<any> {

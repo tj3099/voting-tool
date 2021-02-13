@@ -1,0 +1,62 @@
+<div *ngIf="isAdmin">
+    <a routerLink="/add" class="nav-link">Add User</a>
+
+    <div class="list row">
+      <div class="col-md-12">
+        <h4>Users List</h4>
+        <div class="nav justify-content-end">
+          <button class="m-2 btn btn-outline-success btn-sm" (click)="retrieveUsers()">
+            Refresh
+          </button>
+          <button class="m-2 btn btn-outline-danger btn-sm" (click)="updateList()">
+            Update
+          </button>
+          <button class="m-2 btn btn-outline-danger btn-sm" (click)="resetHasVoted()">
+            Reset hasVoted for all users
+          </button>
+          <button class="m-2 btn btn-sm btn-danger" (click)="removeAllUsers()">
+            Remove All
+          </button>
+        </div>
+
+        <div class="overflow-auto" style="max-height: 400px">
+          <table class="table table-hover">
+            <thead>
+            <tr>
+              <th sortable="mail" scope="col">mail</th>
+              <th scope="col">details</th>
+              <th sortable="active" scope="col">active</th>
+              <th sortable="active" scope="col">grants</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor = "let user of users; let i = index"
+                [class.active]="i == currentIndex"
+                (click)="setActiveUser(user, i)">
+              <td>{{ user.mail }}</td>
+              <td><a class="badge badge-warning" routerLink="/users/{{ user.mail }}" [hidden]="user.grants == 99">View</a></td>
+              <td><input id="active" [(ngModel)]="user.active" type="checkbox" [disabled]="user.grants == 99"></td>
+              <td>{{ user.grants }}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div>
+      <br>
+      <div *ngIf="users">
+        <h3>Statistics</h3>
+        <ul>
+          <li>registered users: {{ users.length }}</li>
+          <li>active users: {{ activeUsers }}</li>
+          <li>users that has voted: {{ votedUsers }}</li>
+        </ul>
+      </div>
+      <app-question-list></app-question-list>
+      <app-add-question></app-add-question>
+      <br>
+      <br>
+      <br>
+    </div>
+</div>

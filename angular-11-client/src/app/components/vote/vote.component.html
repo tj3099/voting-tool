@@ -1,4 +1,7 @@
 <br>
+<div *ngIf="alert.message != ''">
+  <div [class]="alert.type" role="alert">{{ alert.message }}</div>
+</div>
 <div *ngIf = "user.hasVoted">
   <h3>{{ user.mail }}{{ texts.vote.title.hasVoted }}</h3>
 </div>
@@ -8,40 +11,35 @@
 <p innerHtml="{{ texts.vote.texts.description }}"></p>
 <br>
 <button (click)="refreshData()" class="btn btn-info btn-lg btn-block">{{ texts.buttons.refresh }}</button>
-<div *ngIf="alert.message != ''">
-  <div [class]="alert.type" role="alert">{{ alert.message }}</div>
-</div>
-<table *ngIf = "votingList.question && !user.hasVoted" class="table">
-  <thead>
-  <tr>
-    <th scope="col">#</th>
-    <th scope="col">{{ texts.vote.table.title }}</th>
-    <th scope="col">{{ texts.vote.table.description }}</th>
-    <th scope="col">{{ texts.vote.table.voteToSelect }}</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr>
-    <td>{{ votingList.question.id }}</td>
-    <td>{{ votingList.question.title }}</td>
-    <td>{{ votingList.question.description }}</td>
-    <td class="overflow-hidden">
-      <div class="btn-group" role="group" aria-label="Basic example">
-        <button type="button" (click)="setYes()" class="btn btn-info">{{ texts.vote.table.yes }}</button>
-        <button type="button" (click)="setNo()" class="btn btn-info">{{ texts.vote.table.no }}</button>
-        <button type="button" (click)="setAbstention()" class="btn btn-secondary">{{ texts.vote.table.abstention }}</button>
+<div *ngIf = "question && !user.hasVoted" class="card text-center">
+  <div class="card-header">
+    #{{ question.id }}: {{ question.title }}
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">{{ texts.vote.table.title }}</h5>
+    <p class="card-text">{{ question.description }}</p>
+    <form [formGroup]="voteForm">
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" formControlName="vote" type="radio" id="inlineRadio1" value="yes">
+        <label class="form-check-label" for="inlineRadio1">{{ texts.vote.table.yes }}</label>
       </div>
-      <br>
-      {{ texts.vote.table.selectedVote }}: {{ votingList.selected }}
-    </td>
-  </tr>
-  </tbody>
-</table>
-<div *ngIf = "votingList.question && !user.hasVoted">
-    <label for="check"> {{ texts.vote.form.confirm }}
-      <input id="check" [(ngModel)]="checked" [hidden]="false"  type="checkbox">
-    </label>
-    <button *ngIf = "checked && votingList.selected" (click)="vote()" class="btn btn-success btn-lg btn-block">{{ texts.vote.form.button }}{{ votingList.selected }}</button>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" formControlName="vote" type="radio" id="inlineRadio2" value="no">
+        <label class="form-check-label" for="inlineRadio2">{{ texts.vote.table.no }}</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" formControlName="vote" type="radio" id="inlineRadio3" value="abstention">
+        <label class="form-check-label" for="inlineRadio3">{{ texts.vote.table.abstention }}</label>
+      </div>
+    </form>
+  </div>
+  <div class="card-footer text-muted">
+    <div *ngIf = "question && !user.hasVoted" class="form-check">
+      <input id="check" [(ngModel)]="checked" type="checkbox" class="form-check-input">
+      <label for="check"> {{ texts.vote.form.confirm }}</label>
+    </div>
+    <button [disabled]="!checked || !voteForm.value.vote" (click)="vote(question.id, voteForm.value.vote)" class="btn btn-success btn-lg btn-block">{{ texts.vote.form.button }}</button>
+  </div>
 </div>
 <br>
 <br>

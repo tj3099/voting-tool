@@ -26,7 +26,8 @@ export class LoginUserComponent implements OnInit {
   };
 
   alert: Alert;
-  texts: any = environment.texts;
+  voteAlert: Alert;
+  texts: any = JSON.parse(localStorage.getItem('texts')) || environment.texts;
 
   loggedIn: boolean = false;
 
@@ -34,7 +35,15 @@ export class LoginUserComponent implements OnInit {
       this.alert = {
         type: 'alert alert-success',
         message: ''
+      };
+      this.voteAlert = {
+        type: 'alert alert-success',
+        message: ''
       }
+      setTimeout(()=>{
+         this.texts = JSON.parse(localStorage.getItem('texts') || '{}') || environment.texts;
+         console.log(this.texts);
+       }, 1);
   }
 
   ngOnInit(): void {
@@ -49,6 +58,13 @@ export class LoginUserComponent implements OnInit {
       .subscribe(
         response => {
           this.myUser = response;
+          if(!this.myUser.active && this.myUser.grants != 99){
+            this.alert = {
+              type: 'alert alert-warning',
+              message: this.texts.login.alert.active
+            }
+            return;
+          }
           localStorage.setItem('sessionId', this.myUser.sessionId);
           localStorage.setItem('mail', this.myUser.mail);
           this.loggedIn = true;
@@ -97,5 +113,9 @@ export class LoginUserComponent implements OnInit {
           error => {
             console.log(error);
           });
+    }
+
+    showAlert(alert: Alert){
+      this.voteAlert = alert;
     }
 }

@@ -18,6 +18,7 @@ export class UserDetailsComponent implements OnInit {
     grants: 0
   };
   message = '';
+  isAdmin: boolean = false;
 
   constructor(
     private UserService: UserService,
@@ -26,6 +27,7 @@ export class UserDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.message = '';
+    this.getGrants();
     this.getUser(this.route.snapshot.params.id);
   }
 
@@ -60,4 +62,29 @@ export class UserDetailsComponent implements OnInit {
           console.log(error);
         });
   }
+
+  getGrants(): void {
+      const data = {
+          mail: localStorage.getItem('mail') || '',
+          sessionId: localStorage.getItem('sessionId') || '',
+        }
+        this.UserService.getGrants(data)
+          .subscribe(
+            response => {
+              if(response && response <= 99){
+                this.isAdmin = true;
+              }else{
+                this.isAdmin = false;
+              }
+              if(this.isAdmin){
+
+              }else{
+                this.router.navigateByUrl('/login');
+              }
+            },
+            error => {
+              console.log(error);
+              this.isAdmin = false;
+            });
+      }
 }

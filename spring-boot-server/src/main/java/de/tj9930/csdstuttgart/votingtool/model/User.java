@@ -26,6 +26,9 @@ public class User {
 	@Column(name = "hasVoted")
 	private boolean hasVoted = false;
 
+	@Column(name = "active")
+	private boolean active = false;
+
 	public User() {
 
 	}
@@ -35,13 +38,15 @@ public class User {
 		this.secretKey = description;
 		this.hasVoted = hasVoted;
 		this.grants = 0;
+		this.active = true;
 	}
 
-	public User(String mail, String description, boolean hasVoted, Integer grants) {
+	public User(String mail, String secretKey, boolean hasVoted, Integer grants, boolean active) {
 		this.mail = mail;
-		this.secretKey = description;
+		this.secretKey = secretKey;
 		this.hasVoted = hasVoted;
 		this.grants = grants;
+		this.active = active;
 	}
 
 	public String getMail() {
@@ -85,9 +90,17 @@ public class User {
 		this.hasVoted = isPublished;
 	}
 
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+
 	@Override
 	public String toString() {
-		return "User [mail=" + mail + ", key=" + secretKey + ", hasVoted=" + hasVoted + "]";
+		return "User [mail=" + mail + ", key=" + secretKey + ", hasVoted=" + hasVoted + ", active=" + active +"]";
 	}
 
 }

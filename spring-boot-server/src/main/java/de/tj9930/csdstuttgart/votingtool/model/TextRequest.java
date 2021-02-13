@@ -1,8 +1,8 @@
 package de.tj9930.csdstuttgart.votingtool.model;
 
-public class QuestionRequestModel {
+public class TextRequest {
     private User user;
-    private Question question;
+    private Text text;
 
     public User getUser() {
         return user;
@@ -12,11 +12,11 @@ public class QuestionRequestModel {
         this.user = user;
     }
 
-    public Question getQuestion() {
-        return question;
+    public Text getText() {
+        return text;
     }
 
-    public void setQuestion(Question question) {
-        this.question = question;
+    public void setText(Text text) {
+        this.text = text;
     }
 }

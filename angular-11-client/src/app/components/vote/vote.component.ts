@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input} from '@angular/core';
 import { Question } from 'src/app/models/question.model';
 import { User } from 'src/app/models/user.model';
 import { QuestionService } from 'src/app/services/question.service';
@@ -6,15 +6,11 @@ import { VoteService } from 'src/app/services/vote.service';
 import { UserService } from 'src/app/services/user.service';
 import { CommonModule } from '@angular/common';
 import { environment } from './../../../environments/environment';
+import { FormControl, FormGroup} from '@angular/forms';
 
 interface Alert {
   type: string;
   message: string;
-}
-
-interface VotingModel {
-  question: Question,
-  selected: string
 }
 
 @Component({
@@ -28,18 +24,22 @@ export class VoteComponent implements OnInit {
   user: User = new User();
 
   alert: Alert;
-  texts: any = environment.texts;
+  texts: any = JSON.parse(localStorage.getItem('texts') || '') || environment.texts;
 
   checked: boolean = false;
 
-  votingList: VotingModel;
+  question: Question = new Question();
 
+  // Radios for Voting
+  voteForm = new FormGroup({
+    vote: new FormControl()
+  });
+
+  /**
+  * Consructor
+  */
   constructor(private questionService: QuestionService, private voteService: VoteService, private userService: UserService) {
     console.log(this.user);
-    this.votingList = {
-      selected: '',
-      question: new Question()
-    }
     this.refreshData();
     this.alert = {
       message: '',
@@ -48,22 +48,26 @@ export class VoteComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  setTimeout(()=>{
+     this.texts = JSON.parse(localStorage.getItem('texts') || '') || environment.texts;
+     console.log(this.texts);
+   }, 1);
   }
 
-  refreshData() : void{
+  /**
+  * loading open question and all needed data
+  */
+  public refreshData() : void{
     this.questionService.getOpen()
       .subscribe(
         response => {
-          this.votingList = {
-            question: response[0],
-            selected: ''
-          }
-          console.log(this.votingList);
+          this.question = response[0];
+          console.log('[current Questions] ', this.question);
         },
         error => {
           console.log(error);
         });
-        if(this.user){
+        if(this.user.mail){
           this.user.sessionId = localStorage.getItem('sessionId') || '';
           this.userService.getHasVoted(this.user)
             .subscribe(
@@ -71,50 +75,45 @@ export class VoteComponent implements OnInit {
                 this.user.hasVoted = response;
               },
               error => {
-                console.log(error);
+                console.error('[vote refreshData] ', error);
             });
         }
         this.checked = false;
   }
 
-  vote() : void {
-  const myVote = {
-    id: this.votingList.question.id,
-    vote: this.votingList.selected
-  }
-  const data = {
-    user: {
-      mail: localStorage.getItem('mail') || '',
-       sessionId: localStorage.getItem('sessionId') || '',
-    },
-    vote: myVote
-  };
-    this.voteService.vote(data)
-        .subscribe(
-          response => {
-          if(this.user){
-            this.user.hasVoted = response;
-          }
-          this.alert = {
-            message: this.texts.vote.alert.success,
-            type: 'alert alert-success'
-          }
-          },
-          error => {
-            console.log(error);
-          });
-  }
-
-  setYes() : void {
-    this.votingList.selected = 'yes';
-  }
-
-  setNo() : void {
-      this.votingList.selected = 'no';
+  /**
+  * vote
+  */
+  public vote(id: any, vote: any) : void {
+    const myVote = {
+      id: id,
+      vote: vote
     }
-
- setAbstention() : void {
-      this.votingList.selected = 'abstention';
-  }
-
+    const data = {
+      user: {
+        mail: localStorage.getItem('mail') || '',
+         sessionId: localStorage.getItem('sessionId') || '',
+      },
+      vote: myVote
+    };
+    console.log('[vote vote]', data);
+      this.voteService.vote(data)
+          .subscribe(
+            response => {
+            if(this.user){
+              this.user.hasVoted = response;
+            }
+            this.alert = {
+              message: this.texts.vote.alert.success,
+              type: 'alert alert-success'
+            }
+            },
+            error => {
+            this.alert = {
+              message: this.texts.vote.alert.error,
+              type: 'alert alert-danger'
+            }
+              console.error('[vote vote]', error);
+            });
+    }
 }
